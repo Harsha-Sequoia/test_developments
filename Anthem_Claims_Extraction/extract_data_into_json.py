@@ -19,6 +19,9 @@ header2_table2_seperator = 0
 table_2_end_index = 0
 end_index_found = False
 
+
+
+
 for index, row in df.iterrows():
     if regex_month_pattern_match(row[0]):
         header1_table1_seperator = index if not header1_table1_seperator else header1_table1_seperator
@@ -36,11 +39,17 @@ for index, row in df.iterrows():
 
 
 print(header1_table1_seperator, table1_header2_seperator, header2_table2_seperator, table_2_end_index)
+header_1_df_test = df.iloc[0:header1_table1_seperator]
+print(header_1_df_test)
 
 header_1_df = df.iloc[0:header1_table1_seperator].dropna(how='all').dropna(axis=1, how='all').reset_index(drop=True)
+print(header_1_df)
+
 table_1_df = df.iloc[header1_table1_seperator:table1_header2_seperator].dropna(how='all').dropna(axis=1, how='all').reset_index(drop=True)
 header_2_df = df.iloc[table1_header2_seperator + 1:header2_table2_seperator].dropna(how='all').dropna(axis=1, how='all').reset_index(drop=True)
 table_2_df = df.iloc[header2_table2_seperator:table_2_end_index].dropna(how='all').dropna(axis=1, how='all').reset_index(drop=True)
+
+
 
 
 
@@ -52,13 +61,14 @@ table_2_columns = [column.replace("\n", "") for column in header_2_df.iloc[-1].t
 table_1_df.columns = table_1_columns
 table_2_df.columns = table_2_columns
 
-# print(table_1_df)
+
+print(table_1_df)
 # print(table_2_df)
 
 
 parent_columns_table_1 = {}
 parent_column_list = header_1_df.iloc[4].to_list()
-
+print(parent_column_list)
 for index, column in enumerate(parent_column_list):
     if not pd.isna(column):
         start_index = index
@@ -100,7 +110,7 @@ for index, row in table_1_df.iterrows():
         print(f"{parent_column}: {parent_columns_table_1.get(parent_column)['start_index']}, "
               f"{parent_columns_table_1.get(parent_column)['end_index']}")
         for i in range(parent_columns_table_1.get(parent_column)['start_index'],
-                       parent_columns_table_1.get(parent_column)['end_index'], 1):
+                       parent_columns_table_1.get(parent_column)['end_index']+1, 1):
             print(i)
             temp_column_dict[table_1_columns[i]] = row[table_1_columns[i]]
         parent_column_dict[parent_column] = temp_column_dict
